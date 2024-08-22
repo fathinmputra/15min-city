@@ -74,15 +74,23 @@ func (r *datasetRepository) UpdateDataset(ctx context.Context, dataset entity.Da
 
 func (r *datasetRepository) DeleteDataset(ctx context.Context, id int) errs.ErrMessage {
 	var dataset entity.Dataset
-	fmt.Println("Attempting to delete dataset with ID:", id)
-	if err := r.db.WithContext(ctx).Where("id = ?", id).Delete(&dataset).Error; err != nil {
-		fmt.Println("Error deleting dataset:", err)
+	fmt.Println("Attempting to hard delete dataset with ID:", id)
+
+	// Cek apakah dataset dengan ID tersebut ada
+	if err := r.db.WithContext(ctx).First(&dataset, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return errs.NewNotFoundError("dataset not found")
+			return errs.NewNotFoundError("Dataset not found")
 		}
-		return errs.NewInternalServerError("failed to delete dataset")
+		return errs.NewInternalServerError("Failed to fetch dataset for deletion")
 	}
-	fmt.Println("Dataset deleted successfully")
+
+	// Hard delete dataset jika ditemukan
+	if err := r.db.WithContext(ctx).Unscoped().Delete(&dataset).Error; err != nil {
+		fmt.Println("Error deleting dataset:", err)
+		return errs.NewInternalServerError("Failed to delete dataset")
+	}
+
+	fmt.Println("Dataset hard deleted successfully")
 	return nil
 }
 

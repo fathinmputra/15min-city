@@ -5,6 +5,7 @@ import (
 	"15min-city/pkg/errs"
 	"15min-city/pkg/helpers"
 	"15min-city/service"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -144,24 +145,25 @@ func (d *datasetHandler) UpdateDataset(c *gin.Context) {
 
 func (d *datasetHandler) DeleteDataset(c *gin.Context) {
 	idStr := c.Param("datasetID")
-	id, err := strconv.ParseUint(idStr, 10, 32) // Konversi ID ke uint
+	id, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format"})
 		return
 	}
 
+	fmt.Println("Request to delete dataset with ID:", id)
+
 	response, serviceErr := d.datasetService.DeleteDataset(c.Request.Context(), int(id))
 	if serviceErr != nil {
-		// Pastikan serviceErr adalah tipe errs.ErrMessage
 		if customErr, ok := serviceErr.(errs.ErrMessage); ok {
 			c.JSON(customErr.Status(), gin.H{"error": customErr.Message()})
 		} else {
-			// Jika bukan tipe errs.ErrMessage, kembalikan error 500
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 		}
 		return
 	}
 
+	fmt.Println("Dataset deleted successfully:", id)
 	c.JSON(response.Status, response)
 }
 
