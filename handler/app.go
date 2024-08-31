@@ -3,6 +3,7 @@ package handler
 import (
 	"15min-city/db"
 	"15min-city/middleware"
+	"15min-city/repository/corridor_route_repository/corridor_route_db"
 	"15min-city/repository/dataset_repository/dataset_db"
 	"15min-city/repository/user_repository/user_db"
 	"15min-city/service"
@@ -12,17 +13,22 @@ import (
 
 func App() {
 	db.InitializeDB()
-	db := db.GetDBInstance()
+	dbInstance := db.GetDBInstance()
 
 	// User endpoint
-	userRepository := user_db.NewUserRepository(db)
+	userRepository := user_db.NewUserRepository(dbInstance)
 	userService := service.NewUserService(userRepository)
 	userHandler := NewUserHandler(userService)
 
 	// Dataset endpoint
-	datasetRepository := dataset_db.NewDatasetRepository(db)
+	datasetRepository := dataset_db.NewDatasetRepository(dbInstance)
 	datasetService := service.NewDatasetService(datasetRepository)
 	datasetHandler := NewDatasetHandler(datasetService)
+
+	// CorridorRoute endpoint
+	corridorRouteRepository := corridor_route_db.NewCorridorRouteRepository(dbInstance)
+	corridorRouteService := service.NewCorridorRouteService(corridorRouteRepository)
+	corridorRouteHandler := NewCorridorRouteHandler(corridorRouteService)
 
 	r := gin.Default()
 	api := r.Group("/api/v1")
@@ -55,5 +61,17 @@ func App() {
 		datasetRoute.DELETE("/:datasetID", datasetHandler.DeleteDataset)
 		datasetRoute.GET("", datasetHandler.GetAllDatasets)
 	}
+
+	// CorridorRoute routes
+	corridorRoute := api.Group("/corridor-routes")
+	{
+		corridorRoute.POST("", corridorRouteHandler.CreateCorridorRoute)
+		corridorRoute.GET("/:id", corridorRouteHandler.GetCorridorRouteByID)
+		corridorRoute.GET("/name/:name", corridorRouteHandler.GetCorridorRouteByName)
+		corridorRoute.PUT("/:id", corridorRouteHandler.UpdateCorridorRoute)
+		corridorRoute.DELETE("/:id", corridorRouteHandler.DeleteCorridorRoute)
+		corridorRoute.GET("", corridorRouteHandler.GetAllCorridorRoutes)
+	}
+
 	r.Run()
 }

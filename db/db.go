@@ -36,6 +36,7 @@ func createTable() {
 	err := db.AutoMigrate(
 		&entity.User{},
 		&entity.Dataset{},
+		&entity.Corridor_Route{},
 	)
 	if err != nil {
 		log.Fatalf("failed to create tables: %v", err)
