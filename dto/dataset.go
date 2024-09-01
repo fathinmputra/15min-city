@@ -10,8 +10,6 @@ type CreateDatasetRequest struct {
 	Latitude  float64 `json:"latitude" validate:"required"`
 	Longitude float64 `json:"longitude" validate:"required"`
 	Category  string  `json:"category" validate:"required"`
-	Kecamatan string  `json:"kecamatan" validate:"required"`
-	Kelurahan string  `json:"kelurahan" validate:"required"`
 }
 
 // CreateDatasetResponse digunakan untuk merespons pembuatan dataset baru

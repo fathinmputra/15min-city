@@ -4,6 +4,7 @@ import (
 	"15min-city/dto"
 	"15min-city/entity"
 	"15min-city/pkg/errs"
+	"15min-city/pkg/helpers"
 	"15min-city/repository/dataset_repository"
 	"context"
 	"net/http"
@@ -35,13 +36,20 @@ func (d *datasetService) CreateDataset(ctx context.Context, datasetPayload dto.C
 		Latitude:  datasetPayload.Latitude,
 		Longitude: datasetPayload.Longitude,
 		Category:  datasetPayload.Category,
-		Kecamatan: datasetPayload.Kecamatan,
-		Kelurahan: datasetPayload.Kelurahan,
 	}
+
+	// Mendapatkan Kecamatan dan Kelurahan menggunakan reverse geocoding
+	kecamatan, kelurahan, err := helpers.ReverseGeocode(dataset.Latitude, dataset.Longitude)
+	if err != nil {
+		return nil, errs.NewInternalServerError("Failed to fetch geocoding data")
+	}
+
+	dataset.Kecamatan = kecamatan
+	dataset.Kelurahan = kelurahan
 
 	createdDataset, err := d.datasetRepo.CreateDataset(ctx, dataset)
 	if err != nil {
-		return nil, err
+		return nil, errs.NewInternalServerError(err.Error())
 	}
 
 	response := dto.CreateDatasetResponse{
