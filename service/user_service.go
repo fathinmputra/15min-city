@@ -179,6 +179,7 @@ func (u *userService) CreateImage(ctx context.Context, id int, dokumenPayload dt
 
 		createdDokumen, err := u.userRepo.CreateImage(ctx, id, dokumen)
 
+		//Update
 		response := dto.CreateImageResponse{
 			ID:          int(createdDokumen.ID),
 			DokumenID:   createdDokumen.DokumenID,
