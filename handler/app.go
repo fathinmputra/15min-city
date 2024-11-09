@@ -54,6 +54,7 @@ func App() {
 	datasetRoute := api.Group("/datasets")
 	{
 		datasetRoute.POST("", datasetHandler.CreateDataset)
+		datasetRoute.POST("/upload", datasetHandler.UploadDatasets)
 		datasetRoute.GET("/:datasetID", datasetHandler.GetDatasetByID)
 		datasetRoute.GET("/name/:name", datasetHandler.GetDatasetByName)
 		datasetRoute.PUT("/:datasetID", datasetHandler.UpdateDataset)
