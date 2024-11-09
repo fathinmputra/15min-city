@@ -40,15 +40,15 @@ func (r *datasetRepository) GetDatasetByID(ctx context.Context, id int) (*entity
 	return &dataset, nil
 }
 
-func (r *datasetRepository) GetDatasetByName(ctx context.Context, name string) (*entity.Dataset, errs.ErrMessage) {
-	var dataset entity.Dataset
-	if err := r.db.WithContext(ctx).First(&dataset, "name = ?", name).Error; err != nil {
+func (r *datasetRepository) GetDatasetByName(ctx context.Context, name string) ([]entity.Dataset, errs.ErrMessage) {
+	var datasets []entity.Dataset
+	if err := r.db.WithContext(ctx).Where("name LIKE ?", "%"+name+"%").Find(&datasets).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errs.NewNotFoundError("dataset not found")
 		}
-		return nil, errs.NewInternalServerError("failed to get dataset by name")
+		return nil, errs.NewInternalServerError("failed to get datasets by name")
 	}
-	return &dataset, nil
+	return datasets, nil
 }
 
 func (r *datasetRepository) GetDatasetByCategory(ctx context.Context, category string) ([]entity.Dataset, errs.ErrMessage) {

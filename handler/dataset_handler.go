@@ -179,7 +179,7 @@ func (d *datasetHandler) CreateDataset(c *gin.Context) {
 	// Tambahkan pesan sukses ke dalam respons
 	c.JSON(response.Status, gin.H{
 		"message": "Dataset created successfully",
-		// "dataset": response,
+		"dataset": response,
 	})
 }
 
@@ -206,13 +206,13 @@ func (d *datasetHandler) GetDatasetByID(c *gin.Context) {
 
 func (d *datasetHandler) GetDatasetByName(c *gin.Context) {
 	name := c.Param("name")
-	response, err := d.datasetService.GetDatasetByName(c.Request.Context(), name)
+	datasets, err := d.datasetService.GetDatasetByName(c.Request.Context(), name)
 	if err != nil {
-		c.JSON(err.Status(), err)
+		c.JSON(err.Status(), gin.H{"error": err.Message()})
 		return
 	}
 
-	c.JSON(response.Status, response)
+	c.JSON(http.StatusOK, gin.H{"datasets": datasets})
 }
 
 func (d *datasetHandler) GetDatasetByCategory(c *gin.Context) {
