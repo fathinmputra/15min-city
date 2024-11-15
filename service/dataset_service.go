@@ -17,7 +17,7 @@ type datasetService struct {
 type DatasetService interface {
 	CreateDataset(ctx context.Context, datasetPayload dto.CreateDatasetRequest) (*dto.CreateDatasetResponse, errs.ErrMessage)
 	GetDatasetByID(ctx context.Context, id int) (*dto.GetDatasetByIDResponse, errs.ErrMessage)
-	GetDatasetByName(ctx context.Context, name string) ([]dto.GetDatasetByNameResponse, errs.ErrMessage) // Ubah tipe return ke slice
+	GetDatasetByName(ctx context.Context, name string) ([]dto.GetDatasetByNameResponse, errs.ErrMessage)
 	GetDatasetByCategory(ctx context.Context, category string) ([]dto.GetDatasetByCategoryResponse, errs.ErrMessage)
 	UpdateDataset(ctx context.Context, id int, datasetPayload dto.UpdateDatasetRequest) (*dto.UpdateDatasetResponse, errs.ErrMessage)
 	DeleteDataset(ctx context.Context, id int) (*dto.DeleteDatasetResponse, errs.ErrMessage)
