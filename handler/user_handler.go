@@ -81,7 +81,10 @@ func (u *userHandler) GetUserByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(response.Status, response)
+	c.JSON(response.Status, gin.H{
+		"message": "Pengguna ditemukan",
+		"data":    response,
+	})
 }
 
 func (u *userHandler) Login(c *gin.Context) {

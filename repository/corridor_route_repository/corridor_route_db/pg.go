@@ -40,15 +40,15 @@ func (r *corridorRouteRepository) GetCorridorRouteByID(ctx context.Context, id u
 	return &corridorRoute, nil
 }
 
-func (r *corridorRouteRepository) GetCorridorRouteByName(ctx context.Context, name string) (*entity.Corridor_Route, errs.ErrMessage) {
-	var corridorRoute entity.Corridor_Route
-	if err := r.db.WithContext(ctx).First(&corridorRoute, "name = ?", name).Error; err != nil {
+func (r *corridorRouteRepository) GetCorridorRouteByName(ctx context.Context, name string) ([]entity.Corridor_Route, errs.ErrMessage) {
+	var corridorRoute []entity.Corridor_Route
+	if err := r.db.WithContext(ctx).Where("name LIKE ?", "%"+name+"%").Find(&corridorRoute).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errs.NewNotFoundError("corridor route not found")
 		}
 		return nil, errs.NewInternalServerError("failed to get corridor route by name")
 	}
-	return &corridorRoute, nil
+	return corridorRoute, nil
 }
 
 func (r *corridorRouteRepository) UpdateCorridorRoute(ctx context.Context, corridorRoute entity.Corridor_Route) errs.ErrMessage {

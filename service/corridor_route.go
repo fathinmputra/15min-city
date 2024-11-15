@@ -16,7 +16,7 @@ type corridorRouteService struct {
 type CorridorRouteService interface {
 	CreateCorridorRoute(ctx context.Context, corridorRoutePayload dto.CreateCorridorRouteRequest) (*dto.CreateCorridorRouteResponse, errs.ErrMessage)
 	GetCorridorRouteByID(ctx context.Context, id uint) (*dto.GetCorridorRouteByIDResponse, errs.ErrMessage)
-	GetCorridorRouteByName(ctx context.Context, name string) (*dto.GetCorridorRouteByNameResponse, errs.ErrMessage)
+	GetCorridorRouteByName(ctx context.Context, name string) ([]dto.GetCorridorRouteByNameResponse, errs.ErrMessage)
 	UpdateCorridorRoute(ctx context.Context, id uint, corridorRoutePayload dto.UpdateCorridorRouteRequest) (*dto.UpdateCorridorRouteResponse, errs.ErrMessage)
 	DeleteCorridorRoute(ctx context.Context, id uint) (*dto.DeleteCorridorRouteResponse, errs.ErrMessage)
 	GetAllCorridorRoutes(ctx context.Context) (*dto.GetAllCorridorRoutesResponse, errs.ErrMessage)
@@ -78,25 +78,28 @@ func (r *corridorRouteService) GetCorridorRouteByID(ctx context.Context, id uint
 	return &response, nil
 }
 
-func (r *corridorRouteService) GetCorridorRouteByName(ctx context.Context, name string) (*dto.GetCorridorRouteByNameResponse, errs.ErrMessage) {
-	corridorRoute, err := r.corridorRouteRepo.GetCorridorRouteByName(ctx, name)
+func (r *corridorRouteService) GetCorridorRouteByName(ctx context.Context, name string) ([]dto.GetCorridorRouteByNameResponse, errs.ErrMessage) {
+	corridorRoutes, err := r.corridorRouteRepo.GetCorridorRouteByName(ctx, name)
 	if err != nil {
 		return nil, err
 	}
 
-	response := dto.GetCorridorRouteByNameResponse{
-		Status:    http.StatusOK,
-		ID:        corridorRoute.ID,
-		Name:      corridorRoute.Name,
-		Latitude:  corridorRoute.Latitude,
-		Longitude: corridorRoute.Longitude,
-		Route:     corridorRoute.Route,
-		Direction: corridorRoute.Direction,
-		CreatedAt: corridorRoute.CreatedAt,
-		UpdatedAt: corridorRoute.UpdatedAt,
+	var response []dto.GetCorridorRouteByNameResponse
+	for _, corridorRoute := range corridorRoutes {
+		response = append(response, dto.GetCorridorRouteByNameResponse{
+			Status:    http.StatusOK,
+			ID:        corridorRoute.ID,
+			Name:      corridorRoute.Name,
+			Latitude:  corridorRoute.Latitude,
+			Longitude: corridorRoute.Longitude,
+			Route:     corridorRoute.Route,
+			Direction: corridorRoute.Direction,
+			CreatedAt: corridorRoute.CreatedAt,
+			UpdatedAt: corridorRoute.UpdatedAt,
+		})
 	}
 
-	return &response, nil
+	return response, nil
 }
 
 func (r *corridorRouteService) UpdateCorridorRoute(ctx context.Context, id uint, corridorRoutePayload dto.UpdateCorridorRouteRequest) (*dto.UpdateCorridorRouteResponse, errs.ErrMessage) {
