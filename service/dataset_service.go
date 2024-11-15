@@ -167,8 +167,8 @@ func (d *datasetService) GetDatasetByKelurahan(ctx context.Context, name string)
 	return response, nil
 }
 
-func (d *datasetService) GetDatasetByCategory(ctx context.Context, category string) ([]dto.GetDatasetByCategoryResponse, errs.ErrMessage) {
-	datasets, err := d.datasetRepo.GetDatasetByCategory(ctx, category)
+func (d *datasetService) GetDatasetByCategory(ctx context.Context, name string) ([]dto.GetDatasetByCategoryResponse, errs.ErrMessage) {
+	datasets, err := d.datasetRepo.GetDatasetByCategory(ctx, name)
 	if err != nil {
 		return nil, err
 	}
@@ -176,6 +176,7 @@ func (d *datasetService) GetDatasetByCategory(ctx context.Context, category stri
 	var response []dto.GetDatasetByCategoryResponse
 	for _, dataset := range datasets {
 		response = append(response, dto.GetDatasetByCategoryResponse{
+			Status:    http.StatusOK,
 			ID:        int(dataset.ID),
 			Name:      dataset.Name,
 			Latitude:  dataset.Latitude,

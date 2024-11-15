@@ -105,8 +105,9 @@ type GetDatasetByKelurahanResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// GetDatasetByCategoryResponse digunakan untuk mendapatkan dataset berdasarkan kategori
+// GetDatasetByCategoryResponse digunakan untuk mendapatkan dataset berdasarkan nama
 type GetDatasetByCategoryResponse struct {
+	Status    int       `json:"status"`
 	ID        int       `json:"dataset_id"`
 	Name      string    `json:"name"`
 	Latitude  float64   `json:"latitude"`

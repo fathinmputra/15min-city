@@ -75,11 +75,11 @@ func (r *datasetRepository) GetDatasetByKelurahan(ctx context.Context, kelurahan
 
 func (r *datasetRepository) GetDatasetByCategory(ctx context.Context, category string) ([]entity.Dataset, errs.ErrMessage) {
 	var datasets []entity.Dataset
-	if err := r.db.WithContext(ctx).Where("category = ?", category).Find(&datasets).Error; err != nil {
+	if err := r.db.WithContext(ctx).Where("category LIKE ?", "%"+category+"%").Find(&datasets).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errs.NewNotFoundError("datasets not found")
+			return nil, errs.NewNotFoundError("dataset not found")
 		}
-		return nil, errs.NewInternalServerError("failed to get datasets")
+		return nil, errs.NewInternalServerError("failed to get datasets by category")
 	}
 	return datasets, nil
 }
