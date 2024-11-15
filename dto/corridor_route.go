@@ -16,7 +16,7 @@ type CreateCorridorRouteRequest struct {
 // CreateCorridorRouteResponse digunakan untuk merespons pembuatan rute koridor baru
 type CreateCorridorRouteResponse struct {
 	Status    int       `json:"status"`
-	ID        uint      `json:"id"` // Gunakan uint karena gorm.Model ID adalah uint
+	ID        uint      `json:"id"`
 	Name      string    `json:"name"`
 	Latitude  float64   `json:"latitude"`
 	Longitude float64   `json:"longitude"`
@@ -62,6 +62,32 @@ type GetCorridorRouteByIDResponse struct {
 
 // GetCorridorRouteByNameResponse digunakan untuk mendapatkan rute koridor berdasarkan nama
 type GetCorridorRouteByNameResponse struct {
+	Status    int       `json:"status"`
+	ID        uint      `json:"id"`
+	Name      string    `json:"name"`
+	Latitude  float64   `json:"latitude"`
+	Longitude float64   `json:"longitude"`
+	Route     string    `json:"route"`
+	Direction string    `json:"direction"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// GetCorridorRouteByRouteResponse digunakan untuk mendapatkan rute koridor berdasarkan nama
+type GetCorridorRouteByRouteResponse struct {
+	Status    int       `json:"status"`
+	ID        uint      `json:"id"`
+	Name      string    `json:"name"`
+	Latitude  float64   `json:"latitude"`
+	Longitude float64   `json:"longitude"`
+	Route     string    `json:"route"`
+	Direction string    `json:"direction"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// GetCorridorRouteByDirectionResponse digunakan untuk mendapatkan rute koridor berdasarkan nama
+type GetCorridorRouteByDirectionResponse struct {
 	Status    int       `json:"status"`
 	ID        uint      `json:"id"`
 	Name      string    `json:"name"`

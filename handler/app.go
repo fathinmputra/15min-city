@@ -42,7 +42,7 @@ func App() {
 		userRoute.POST("/login", userHandler.Login)
 		userRoute.PATCH("/reset-password", userHandler.ResetPassword)
 
-		homeRoute := userRoute.Group("/my-account")
+		homeRoute := userRoute.Group("/me")
 		{
 			homeRoute.GET("", middleware.Authentication(), userHandler.GetUserByID)
 			homeRoute.PATCH("/upload", middleware.Authentication(), userHandler.CreateImage)

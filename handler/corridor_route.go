@@ -19,6 +19,8 @@ type CorridorRouteHandler interface {
 	CreateCorridorRoute(c *gin.Context)
 	GetCorridorRouteByID(c *gin.Context)
 	GetCorridorRouteByName(c *gin.Context)
+	// GetCorridorRouteByRoute(c *gin.Context)
+	// GetCorridorRouteByDirection(c *gin.Context)
 	UpdateCorridorRoute(c *gin.Context)
 	DeleteCorridorRoute(c *gin.Context)
 	GetAllCorridorRoutes(c *gin.Context)
@@ -50,7 +52,7 @@ func (r *corridorRouteHandler) CreateCorridorRoute(c *gin.Context) {
 		return
 	}
 
-	c.JSON(response.Status, response)
+	c.JSON(http.StatusOK, response)
 }
 
 func (r *corridorRouteHandler) GetCorridorRouteByID(c *gin.Context) {
@@ -73,7 +75,7 @@ func (r *corridorRouteHandler) GetCorridorRouteByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(response.Status, response)
+	c.JSON(http.StatusOK, response)
 }
 
 func (r *corridorRouteHandler) GetCorridorRouteByName(c *gin.Context) {
@@ -81,12 +83,36 @@ func (r *corridorRouteHandler) GetCorridorRouteByName(c *gin.Context) {
 
 	response, err := r.corridorRouteService.GetCorridorRouteByName(c.Request.Context(), name)
 	if err != nil {
-		c.JSON(err.Status(), err)
+		c.JSON(err.Status(), gin.H{"error": err.Message()})
 		return
 	}
 
-	c.JSON(response.Status, response)
+	c.JSON(http.StatusOK, response)
 }
+
+// func (r *corridorRouteHandler) GetCorridorRouteByRoute(c *gin.Context) {
+// 	route := c.Param("route")
+
+// 	response, err := r.corridorRouteService.GetCorridorRouteByRoute(c.Request.Context(), route)
+// 	if err != nil {
+// 		c.JSON(err.Status(), gin.H{"error": err.Message()})
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusOK, response)
+// }
+
+// func (r *corridorRouteHandler) GetCorridorRouteByDirection(c *gin.Context) {
+// 	direction := c.Param("direction")
+
+// 	response, err := r.corridorRouteService.GetCorridorRouteByDirection(c.Request.Context(), direction)
+// 	if err != nil {
+// 		c.JSON(err.Status(), gin.H{"error": err.Message()})
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusOK, response)
+// }
 
 func (r *corridorRouteHandler) UpdateCorridorRoute(c *gin.Context) {
 	idStr := c.Param("id")

@@ -106,7 +106,10 @@ func (u *userHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(response.Status, response)
+	c.JSON(response.Status, gin.H{
+		"message": "Login Berhasil",
+		"data":    response,
+	})
 }
 
 func (u *userHandler) Logout(c *gin.Context) {
