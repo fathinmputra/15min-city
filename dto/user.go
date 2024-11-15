@@ -37,12 +37,12 @@ type LoginUserResponse struct {
 }
 
 type User struct {
-	Name        string    `json:"name"`
-	Email       string    `json:"email"`
-	PhoneNumber string    `json:"phone_number"`
-	Role        string    `json:"role"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	Name        string     `json:"name"`
+	Email       string     `json:"email"`
+	PhoneNumber string     `json:"phone_number"`
+	Role        string     `json:"role"`
+	CreatedAt   *time.Time `json:"created_at"`
+	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
 type GetUserByIDResponse struct {
