@@ -77,6 +77,34 @@ type GetDatasetByNameResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// GetDatasetByKecamatanResponse digunakan untuk mendapatkan dataset berdasarkan nama
+type GetDatasetByKecamatanResponse struct {
+	Status    int       `json:"status"`
+	ID        int       `json:"dataset_id"`
+	Name      string    `json:"name"`
+	Latitude  float64   `json:"latitude"`
+	Longitude float64   `json:"longitude"`
+	Category  string    `json:"category"`
+	Kecamatan string    `json:"kecamatan"`
+	Kelurahan string    `json:"kelurahan"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// GetDatasetByKelurahanResponse digunakan untuk mendapatkan dataset berdasarkan nama
+type GetDatasetByKelurahanResponse struct {
+	Status    int       `json:"status"`
+	ID        int       `json:"dataset_id"`
+	Name      string    `json:"name"`
+	Latitude  float64   `json:"latitude"`
+	Longitude float64   `json:"longitude"`
+	Category  string    `json:"category"`
+	Kecamatan string    `json:"kecamatan"`
+	Kelurahan string    `json:"kelurahan"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
 // GetDatasetByCategoryResponse digunakan untuk mendapatkan dataset berdasarkan kategori
 type GetDatasetByCategoryResponse struct {
 	ID        int       `json:"dataset_id"`

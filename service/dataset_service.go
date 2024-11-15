@@ -18,6 +18,8 @@ type DatasetService interface {
 	CreateDataset(ctx context.Context, datasetPayload dto.CreateDatasetRequest) (*dto.CreateDatasetResponse, errs.ErrMessage)
 	GetDatasetByID(ctx context.Context, id int) (*dto.GetDatasetByIDResponse, errs.ErrMessage)
 	GetDatasetByName(ctx context.Context, name string) ([]dto.GetDatasetByNameResponse, errs.ErrMessage)
+	GetDatasetByKecamatan(ctx context.Context, kecamatan string) ([]dto.GetDatasetByKecamatanResponse, errs.ErrMessage)
+	GetDatasetByKelurahan(ctx context.Context, kelurahan string) ([]dto.GetDatasetByKelurahanResponse, errs.ErrMessage)
 	GetDatasetByCategory(ctx context.Context, category string) ([]dto.GetDatasetByCategoryResponse, errs.ErrMessage)
 	UpdateDataset(ctx context.Context, id int, datasetPayload dto.UpdateDatasetRequest) (*dto.UpdateDatasetResponse, errs.ErrMessage)
 	DeleteDataset(ctx context.Context, id int) (*dto.DeleteDatasetResponse, errs.ErrMessage)
@@ -99,6 +101,56 @@ func (d *datasetService) GetDatasetByName(ctx context.Context, name string) ([]d
 	var response []dto.GetDatasetByNameResponse
 	for _, dataset := range datasets {
 		response = append(response, dto.GetDatasetByNameResponse{
+			Status:    http.StatusOK,
+			ID:        int(dataset.ID),
+			Name:      dataset.Name,
+			Latitude:  dataset.Latitude,
+			Longitude: dataset.Longitude,
+			Category:  dataset.Category,
+			Kecamatan: dataset.Kecamatan,
+			Kelurahan: dataset.Kelurahan,
+			CreatedAt: dataset.CreatedAt,
+			UpdatedAt: dataset.UpdatedAt,
+		})
+	}
+
+	return response, nil
+}
+
+func (d *datasetService) GetDatasetByKecamatan(ctx context.Context, name string) ([]dto.GetDatasetByKecamatanResponse, errs.ErrMessage) {
+	datasets, err := d.datasetRepo.GetDatasetByKecamatan(ctx, name)
+	if err != nil {
+		return nil, err
+	}
+
+	var response []dto.GetDatasetByKecamatanResponse
+	for _, dataset := range datasets {
+		response = append(response, dto.GetDatasetByKecamatanResponse{
+			Status:    http.StatusOK,
+			ID:        int(dataset.ID),
+			Name:      dataset.Name,
+			Latitude:  dataset.Latitude,
+			Longitude: dataset.Longitude,
+			Category:  dataset.Category,
+			Kecamatan: dataset.Kecamatan,
+			Kelurahan: dataset.Kelurahan,
+			CreatedAt: dataset.CreatedAt,
+			UpdatedAt: dataset.UpdatedAt,
+		})
+	}
+
+	return response, nil
+}
+
+func (d *datasetService) GetDatasetByKelurahan(ctx context.Context, name string) ([]dto.GetDatasetByKelurahanResponse, errs.ErrMessage) {
+	datasets, err := d.datasetRepo.GetDatasetByKelurahan(ctx, name)
+	if err != nil {
+		return nil, err
+	}
+
+	var response []dto.GetDatasetByKelurahanResponse
+	for _, dataset := range datasets {
+		response = append(response, dto.GetDatasetByKelurahanResponse{
 			Status:    http.StatusOK,
 			ID:        int(dataset.ID),
 			Name:      dataset.Name,

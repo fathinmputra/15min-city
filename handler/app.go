@@ -57,6 +57,8 @@ func App() {
 		datasetRoute.POST("/upload", datasetHandler.UploadDatasets)
 		datasetRoute.GET("/:datasetID", datasetHandler.GetDatasetByID)
 		datasetRoute.GET("/name/:name", datasetHandler.GetDatasetByName)
+		datasetRoute.GET("/kecamatan/:kecamatan", datasetHandler.GetDatasetByKecamatan)
+		datasetRoute.GET("/kelurahan/:kelurahan", datasetHandler.GetDatasetByKelurahan)
 		datasetRoute.PUT("/:datasetID", datasetHandler.UpdateDataset)
 		datasetRoute.GET("/category/:category", datasetHandler.GetDatasetByCategory)
 		datasetRoute.DELETE("/:datasetID", datasetHandler.DeleteDataset)

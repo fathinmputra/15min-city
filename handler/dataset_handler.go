@@ -23,11 +23,13 @@ type DatasetHandler interface {
 	CreateDataset(c *gin.Context)
 	GetDatasetByID(c *gin.Context)
 	GetDatasetByName(c *gin.Context)
+	GetDatasetByKecamatan(c *gin.Context)
+	GetDatasetByKelurahan(c *gin.Context)
 	GetDatasetByCategory(c *gin.Context)
 	UpdateDataset(c *gin.Context)
 	DeleteDataset(c *gin.Context)
 	GetAllDatasets(c *gin.Context)
-	UploadDatasets(c *gin.Context) // Tambahkan method untuk upload
+	UploadDatasets(c *gin.Context)
 }
 
 func NewDatasetHandler(datasetService service.DatasetService) DatasetHandler {
@@ -207,6 +209,28 @@ func (d *datasetHandler) GetDatasetByID(c *gin.Context) {
 func (d *datasetHandler) GetDatasetByName(c *gin.Context) {
 	name := c.Param("name")
 	datasets, err := d.datasetService.GetDatasetByName(c.Request.Context(), name)
+	if err != nil {
+		c.JSON(err.Status(), gin.H{"error": err.Message()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"datasets": datasets})
+}
+
+func (d *datasetHandler) GetDatasetByKecamatan(c *gin.Context) {
+	kecamatan := c.Param("kecamatan")
+	datasets, err := d.datasetService.GetDatasetByKecamatan(c.Request.Context(), kecamatan)
+	if err != nil {
+		c.JSON(err.Status(), gin.H{"error": err.Message()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"datasets": datasets})
+}
+
+func (d *datasetHandler) GetDatasetByKelurahan(c *gin.Context) {
+	kelurahan := c.Param("kelurahan")
+	datasets, err := d.datasetService.GetDatasetByKelurahan(c.Request.Context(), kelurahan)
 	if err != nil {
 		c.JSON(err.Status(), gin.H{"error": err.Message()})
 		return

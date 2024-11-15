@@ -51,6 +51,28 @@ func (r *datasetRepository) GetDatasetByName(ctx context.Context, name string) (
 	return datasets, nil
 }
 
+func (r *datasetRepository) GetDatasetByKecamatan(ctx context.Context, kecamatan string) ([]entity.Dataset, errs.ErrMessage) {
+	var datasets []entity.Dataset
+	if err := r.db.WithContext(ctx).Where("kecamatan LIKE ?", "%"+kecamatan+"%").Find(&datasets).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.NewNotFoundError("dataset not found")
+		}
+		return nil, errs.NewInternalServerError("failed to get datasets by kecamatan")
+	}
+	return datasets, nil
+}
+
+func (r *datasetRepository) GetDatasetByKelurahan(ctx context.Context, kelurahan string) ([]entity.Dataset, errs.ErrMessage) {
+	var datasets []entity.Dataset
+	if err := r.db.WithContext(ctx).Where("kelurahan LIKE ?", "%"+kelurahan+"%").Find(&datasets).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.NewNotFoundError("dataset not found")
+		}
+		return nil, errs.NewInternalServerError("failed to get datasets by kelurahan")
+	}
+	return datasets, nil
+}
+
 func (r *datasetRepository) GetDatasetByCategory(ctx context.Context, category string) ([]entity.Dataset, errs.ErrMessage) {
 	var datasets []entity.Dataset
 	if err := r.db.WithContext(ctx).Where("category = ?", category).Find(&datasets).Error; err != nil {
