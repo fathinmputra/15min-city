@@ -71,6 +71,8 @@ func App() {
 		corridorRoute.POST("", corridorRouteHandler.CreateCorridorRoute)
 		corridorRoute.GET("/:id", corridorRouteHandler.GetCorridorRouteByID)
 		corridorRoute.GET("/name/:name", corridorRouteHandler.GetCorridorRouteByName)
+		corridorRoute.GET("/route/:route", corridorRouteHandler.GetCorridorRouteByRoute)
+		corridorRoute.GET("/direction/:direction", corridorRouteHandler.GetCorridorRouteByDirection)
 		corridorRoute.PUT("/:id", corridorRouteHandler.UpdateCorridorRoute)
 		corridorRoute.DELETE("/:id", corridorRouteHandler.DeleteCorridorRoute)
 		corridorRoute.GET("", corridorRouteHandler.GetAllCorridorRoutes)

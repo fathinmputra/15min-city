@@ -17,6 +17,8 @@ type CorridorRouteService interface {
 	CreateCorridorRoute(ctx context.Context, corridorRoutePayload dto.CreateCorridorRouteRequest) (*dto.CreateCorridorRouteResponse, errs.ErrMessage)
 	GetCorridorRouteByID(ctx context.Context, id uint) (*dto.GetCorridorRouteByIDResponse, errs.ErrMessage)
 	GetCorridorRouteByName(ctx context.Context, name string) ([]dto.GetCorridorRouteByNameResponse, errs.ErrMessage)
+	GetCorridorRouteByRoute(ctx context.Context, route string) ([]dto.GetCorridorRouteByRouteResponse, errs.ErrMessage)
+	GetCorridorRouteByDirection(ctx context.Context, direction string) ([]dto.GetCorridorRouteByDirectionResponse, errs.ErrMessage)
 	UpdateCorridorRoute(ctx context.Context, id uint, corridorRoutePayload dto.UpdateCorridorRouteRequest) (*dto.UpdateCorridorRouteResponse, errs.ErrMessage)
 	DeleteCorridorRoute(ctx context.Context, id uint) (*dto.DeleteCorridorRouteResponse, errs.ErrMessage)
 	GetAllCorridorRoutes(ctx context.Context) (*dto.GetAllCorridorRoutesResponse, errs.ErrMessage)
@@ -87,6 +89,54 @@ func (r *corridorRouteService) GetCorridorRouteByName(ctx context.Context, name 
 	var response []dto.GetCorridorRouteByNameResponse
 	for _, corridorRoute := range corridorRoutes {
 		response = append(response, dto.GetCorridorRouteByNameResponse{
+			Status:    http.StatusOK,
+			ID:        corridorRoute.ID,
+			Name:      corridorRoute.Name,
+			Latitude:  corridorRoute.Latitude,
+			Longitude: corridorRoute.Longitude,
+			Route:     corridorRoute.Route,
+			Direction: corridorRoute.Direction,
+			CreatedAt: corridorRoute.CreatedAt,
+			UpdatedAt: corridorRoute.UpdatedAt,
+		})
+	}
+
+	return response, nil
+}
+
+func (r *corridorRouteService) GetCorridorRouteByRoute(ctx context.Context, route string) ([]dto.GetCorridorRouteByRouteResponse, errs.ErrMessage) {
+	corridorRoutes, err := r.corridorRouteRepo.GetCorridorRouteByRoute(ctx, route)
+	if err != nil {
+		return nil, err
+	}
+
+	var response []dto.GetCorridorRouteByRouteResponse
+	for _, corridorRoute := range corridorRoutes {
+		response = append(response, dto.GetCorridorRouteByRouteResponse{
+			Status:    http.StatusOK,
+			ID:        corridorRoute.ID,
+			Name:      corridorRoute.Name,
+			Latitude:  corridorRoute.Latitude,
+			Longitude: corridorRoute.Longitude,
+			Route:     corridorRoute.Route,
+			Direction: corridorRoute.Direction,
+			CreatedAt: corridorRoute.CreatedAt,
+			UpdatedAt: corridorRoute.UpdatedAt,
+		})
+	}
+
+	return response, nil
+}
+
+func (r *corridorRouteService) GetCorridorRouteByDirection(ctx context.Context, direction string) ([]dto.GetCorridorRouteByDirectionResponse, errs.ErrMessage) {
+	corridorRoutes, err := r.corridorRouteRepo.GetCorridorRouteByDirection(ctx, direction)
+	if err != nil {
+		return nil, err
+	}
+
+	var response []dto.GetCorridorRouteByDirectionResponse
+	for _, corridorRoute := range corridorRoutes {
+		response = append(response, dto.GetCorridorRouteByDirectionResponse{
 			Status:    http.StatusOK,
 			ID:        corridorRoute.ID,
 			Name:      corridorRoute.Name,

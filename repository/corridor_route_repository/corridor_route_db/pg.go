@@ -51,6 +51,28 @@ func (r *corridorRouteRepository) GetCorridorRouteByName(ctx context.Context, na
 	return corridorRoute, nil
 }
 
+func (r *corridorRouteRepository) GetCorridorRouteByRoute(ctx context.Context, route string) ([]entity.Corridor_Route, errs.ErrMessage) {
+	var corridorRoute []entity.Corridor_Route
+	if err := r.db.WithContext(ctx).Where("route LIKE ?", "%"+route+"%").Find(&corridorRoute).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.NewNotFoundError("corridor route not found")
+		}
+		return nil, errs.NewInternalServerError("failed to get corridor route by route")
+	}
+	return corridorRoute, nil
+}
+
+func (r *corridorRouteRepository) GetCorridorRouteByDirection(ctx context.Context, direction string) ([]entity.Corridor_Route, errs.ErrMessage) {
+	var corridorRoute []entity.Corridor_Route
+	if err := r.db.WithContext(ctx).Where("direction LIKE ?", "%"+direction+"%").Find(&corridorRoute).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.NewNotFoundError("corridor route not found")
+		}
+		return nil, errs.NewInternalServerError("failed to get corridor route by direction")
+	}
+	return corridorRoute, nil
+}
+
 func (r *corridorRouteRepository) UpdateCorridorRoute(ctx context.Context, corridorRoute entity.Corridor_Route) errs.ErrMessage {
 	if err := r.db.WithContext(ctx).Model(&entity.Corridor_Route{}).Where("id = ?", corridorRoute.ID).Updates(corridorRoute).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

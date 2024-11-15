@@ -19,6 +19,8 @@ type CorridorRouteHandler interface {
 	CreateCorridorRoute(c *gin.Context)
 	GetCorridorRouteByID(c *gin.Context)
 	GetCorridorRouteByName(c *gin.Context)
+	GetCorridorRouteByRoute(c *gin.Context)
+	GetCorridorRouteByDirection(c *gin.Context)
 	UpdateCorridorRoute(c *gin.Context)
 	DeleteCorridorRoute(c *gin.Context)
 	GetAllCorridorRoutes(c *gin.Context)
@@ -85,7 +87,40 @@ func (r *corridorRouteHandler) GetCorridorRouteByName(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": response})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Data ditemukan",
+		"data":    response,
+	})
+}
+
+func (r *corridorRouteHandler) GetCorridorRouteByRoute(c *gin.Context) {
+	route := c.Param("route")
+
+	response, err := r.corridorRouteService.GetCorridorRouteByRoute(c.Request.Context(), route)
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Data ditemukan",
+		"data":    response,
+	})
+}
+
+func (r *corridorRouteHandler) GetCorridorRouteByDirection(c *gin.Context) {
+	direction := c.Param("direction")
+
+	response, err := r.corridorRouteService.GetCorridorRouteByDirection(c.Request.Context(), direction)
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Data ditemukan",
+		"data":    response,
+	})
 }
 
 func (r *corridorRouteHandler) UpdateCorridorRoute(c *gin.Context) {
@@ -134,11 +169,7 @@ func (r *corridorRouteHandler) DeleteCorridorRoute(c *gin.Context) {
 
 	response, serviceErr := r.corridorRouteService.DeleteCorridorRoute(c.Request.Context(), uint(id))
 	if serviceErr != nil {
-		if customErr, ok := serviceErr.(errs.ErrMessage); ok {
-			c.JSON(customErr.Status(), gin.H{"error": customErr.Message()})
-		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
-		}
+		c.JSON(serviceErr.Status(), gin.H{"error": serviceErr.Message()})
 		return
 	}
 
