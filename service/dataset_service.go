@@ -23,7 +23,7 @@ type DatasetService interface {
 	GetDatasetByCategory(ctx context.Context, category string) ([]dto.GetDatasetByCategoryResponse, errs.ErrMessage)
 	UpdateDataset(ctx context.Context, id int, datasetPayload dto.UpdateDatasetRequest) (*dto.UpdateDatasetResponse, errs.ErrMessage)
 	DeleteDataset(ctx context.Context, id int) (*dto.DeleteDatasetResponse, errs.ErrMessage)
-	GetAllDatasets(ctx context.Context) (*dto.GetAllDatasetsResponse, errs.ErrMessage)
+	GetAllDatasets(ctx context.Context) ([]dto.GetAllDatasetsResponse, errs.ErrMessage)
 }
 
 func NewDatasetService(datasetRepo dataset_repository.DatasetRepository) DatasetService {
@@ -55,7 +55,7 @@ func (d *datasetService) CreateDataset(ctx context.Context, datasetPayload dto.C
 	}
 
 	response := dto.CreateDatasetResponse{
-		Status:    http.StatusCreated,
+		// Status:    http.StatusCreated,
 		ID:        int(createdDataset.ID),
 		Name:      createdDataset.Name,
 		Latitude:  createdDataset.Latitude,
@@ -77,7 +77,7 @@ func (d *datasetService) GetDatasetByID(ctx context.Context, id int) (*dto.GetDa
 	}
 
 	response := dto.GetDatasetByIDResponse{
-		Status:    http.StatusOK,
+		// Status:    http.StatusOK,
 		ID:        int(dataset.ID),
 		Name:      dataset.Name,
 		Latitude:  dataset.Latitude,
@@ -101,7 +101,7 @@ func (d *datasetService) GetDatasetByName(ctx context.Context, name string) ([]d
 	var response []dto.GetDatasetByNameResponse
 	for _, dataset := range datasets {
 		response = append(response, dto.GetDatasetByNameResponse{
-			Status:    http.StatusOK,
+			// Status:    http.StatusOK,
 			ID:        int(dataset.ID),
 			Name:      dataset.Name,
 			Latitude:  dataset.Latitude,
@@ -126,7 +126,7 @@ func (d *datasetService) GetDatasetByKecamatan(ctx context.Context, name string)
 	var response []dto.GetDatasetByKecamatanResponse
 	for _, dataset := range datasets {
 		response = append(response, dto.GetDatasetByKecamatanResponse{
-			Status:    http.StatusOK,
+			// Status:    http.StatusOK,
 			ID:        int(dataset.ID),
 			Name:      dataset.Name,
 			Latitude:  dataset.Latitude,
@@ -151,7 +151,7 @@ func (d *datasetService) GetDatasetByKelurahan(ctx context.Context, name string)
 	var response []dto.GetDatasetByKelurahanResponse
 	for _, dataset := range datasets {
 		response = append(response, dto.GetDatasetByKelurahanResponse{
-			Status:    http.StatusOK,
+			// Status:    http.StatusOK,
 			ID:        int(dataset.ID),
 			Name:      dataset.Name,
 			Latitude:  dataset.Latitude,
@@ -176,7 +176,7 @@ func (d *datasetService) GetDatasetByCategory(ctx context.Context, name string) 
 	var response []dto.GetDatasetByCategoryResponse
 	for _, dataset := range datasets {
 		response = append(response, dto.GetDatasetByCategoryResponse{
-			Status:    http.StatusOK,
+			// Status:    http.StatusOK,
 			ID:        int(dataset.ID),
 			Name:      dataset.Name,
 			Latitude:  dataset.Latitude,
@@ -227,7 +227,7 @@ func (d *datasetService) UpdateDataset(ctx context.Context, id int, datasetPaylo
 
 	// Prepare response
 	response := dto.UpdateDatasetResponse{
-		Status:    http.StatusOK,
+		// Status:    http.StatusOK,
 		ID:        int(existingDataset.ID),
 		Name:      existingDataset.Name,
 		Latitude:  existingDataset.Latitude,
@@ -255,16 +255,18 @@ func (d *datasetService) DeleteDataset(ctx context.Context, id int) (*dto.Delete
 	return &response, nil
 }
 
-func (d *datasetService) GetAllDatasets(ctx context.Context) (*dto.GetAllDatasetsResponse, errs.ErrMessage) {
+func (d *datasetService) GetAllDatasets(ctx context.Context) ([]dto.GetAllDatasetsResponse, errs.ErrMessage) {
+	// Panggil repository untuk mendapatkan semua dataset
 	datasets, err := d.datasetRepo.GetAllDatasets(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	// Prepare the response with the list of datasets
-	responseDatasets := []dto.DatasetInfo{}
+	// Siapkan slice response
+	var response []dto.GetAllDatasetsResponse
 	for _, dataset := range datasets {
-		responseDatasets = append(responseDatasets, dto.DatasetInfo{
+		response = append(response, dto.GetAllDatasetsResponse{
+			// Status:    http.StatusOK,
 			ID:        int(dataset.ID),
 			Name:      dataset.Name,
 			Latitude:  dataset.Latitude,
@@ -277,11 +279,5 @@ func (d *datasetService) GetAllDatasets(ctx context.Context) (*dto.GetAllDataset
 		})
 	}
 
-	response := dto.GetAllDatasetsResponse{
-		Status:   http.StatusOK,
-		Message:  "All datasets retrieved successfully",
-		Datasets: responseDatasets,
-	}
-
-	return &response, nil
+	return response, nil
 }

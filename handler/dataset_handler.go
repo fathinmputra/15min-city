@@ -42,13 +42,13 @@ func NewDatasetHandler(datasetService service.DatasetService) DatasetHandler {
 func (d *datasetHandler) UploadDatasets(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "File is required"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "File diperlukan"})
 		return
 	}
 
 	tempFile, err := file.Open()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to open file"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Tidak dapat membuka file"})
 		return
 	}
 	defer tempFile.Close()
@@ -59,7 +59,7 @@ func (d *datasetHandler) UploadDatasets(c *gin.Context) {
 	} else if ext == ".xlsx" {
 		d.processExcel(c, tempFile)
 	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Unsupported file format. Please upload a CSV or Excel file."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Format file tidak didukung. Silakan unggah file CSV atau Excel."})
 	}
 }
 
@@ -105,8 +105,8 @@ func (d *datasetHandler) processCSV(c *gin.Context, file io.Reader) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message":          "Datasets uploaded successfully",
-		"created_datasets": createdDatasets,
+		"message": "Seluruh dataset berhasil ditambahkan",
+		"data":    createdDatasets,
 	})
 }
 
@@ -144,8 +144,8 @@ func (d *datasetHandler) processExcel(c *gin.Context, file io.Reader) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message":          "Datasets uploaded successfully",
-		"created_datasets": createdDatasets,
+		"message": "Seluruh dataset berhasil ditambahkan",
+		"data":    createdDatasets,
 	})
 }
 
@@ -179,9 +179,9 @@ func (d *datasetHandler) CreateDataset(c *gin.Context) {
 	}
 
 	// Tambahkan pesan sukses ke dalam respons
-	c.JSON(response.Status, gin.H{
-		"message": "Dataset created successfully",
-		"dataset": response,
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Dataset berhasil ditambahkan",
+		"data":    response,
 	})
 }
 
@@ -203,7 +203,10 @@ func (d *datasetHandler) GetDatasetByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(response.Status, response)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Dataset berhasil didapatkan",
+		"data":    response,
+	})
 }
 
 func (d *datasetHandler) GetDatasetByName(c *gin.Context) {
@@ -214,7 +217,10 @@ func (d *datasetHandler) GetDatasetByName(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"datasets": datasets})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Dataset berhasil didapatkan",
+		"data":    datasets,
+	})
 }
 
 func (d *datasetHandler) GetDatasetByKecamatan(c *gin.Context) {
@@ -225,7 +231,10 @@ func (d *datasetHandler) GetDatasetByKecamatan(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"datasets": datasets})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Seluruh dataset berhasil didapatkan",
+		"data":    datasets,
+	})
 }
 
 func (d *datasetHandler) GetDatasetByKelurahan(c *gin.Context) {
@@ -236,7 +245,10 @@ func (d *datasetHandler) GetDatasetByKelurahan(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"datasets": datasets})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Seluruh dataset berhasil didapatkan",
+		"data":    datasets,
+	})
 }
 
 func (d *datasetHandler) GetDatasetByCategory(c *gin.Context) {
@@ -247,7 +259,10 @@ func (d *datasetHandler) GetDatasetByCategory(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"datasets": datasets})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Seluruh dataset berhasil didapatkan",
+		"data":    datasets,
+	})
 }
 
 func (d *datasetHandler) UpdateDataset(c *gin.Context) {
@@ -280,9 +295,9 @@ func (d *datasetHandler) UpdateDataset(c *gin.Context) {
 		return
 	}
 
-	c.JSON(response.Status, gin.H{
-		"message": "Dataset updated successfully",
-		"dataset": response,
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Dataset berhasil diperbaharui",
+		"data":    response,
 	})
 }
 
@@ -301,8 +316,8 @@ func (d *datasetHandler) DeleteDataset(c *gin.Context) {
 	}
 
 	c.JSON(response.Status, gin.H{
-		"message": "Dataset deleted successfully",
-		"dataset": response,
+		"message": "Dataset berhasil dihapus",
+		"data":    response,
 	})
 }
 
@@ -313,5 +328,8 @@ func (d *datasetHandler) GetAllDatasets(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, datasets)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Seluruh dataset berhasil didapatkan",
+		"data":    datasets,
+	})
 }
