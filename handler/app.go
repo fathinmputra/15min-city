@@ -53,29 +53,29 @@ func App() {
 	// Dataset routes
 	datasetRoute := api.Group("/datasets")
 	{
-		datasetRoute.POST("", datasetHandler.CreateDataset)
-		datasetRoute.POST("/upload", datasetHandler.UploadDatasets)
-		datasetRoute.GET("/:datasetID", datasetHandler.GetDatasetByID)
-		datasetRoute.GET("/name/:name", datasetHandler.GetDatasetByName)
-		datasetRoute.GET("/kecamatan/:kecamatan", datasetHandler.GetDatasetByKecamatan)
-		datasetRoute.GET("/kelurahan/:kelurahan", datasetHandler.GetDatasetByKelurahan)
-		datasetRoute.PUT("/:datasetID", datasetHandler.UpdateDataset)
-		datasetRoute.GET("/category/:category", datasetHandler.GetDatasetByCategory)
-		datasetRoute.DELETE("/:datasetID", datasetHandler.DeleteDataset)
-		datasetRoute.GET("", datasetHandler.GetAllDatasets)
+		datasetRoute.POST("", middleware.Authentication(), middleware.Authorization(), datasetHandler.CreateDataset)
+		datasetRoute.POST("/upload", middleware.Authentication(), middleware.Authorization(), datasetHandler.UploadDatasets)
+		datasetRoute.GET("/:datasetID", middleware.Authentication(), datasetHandler.GetDatasetByID)
+		datasetRoute.GET("/name/:name", middleware.Authentication(), datasetHandler.GetDatasetByName)
+		datasetRoute.GET("/kecamatan/:kecamatan", middleware.Authentication(), datasetHandler.GetDatasetByKecamatan)
+		datasetRoute.GET("/kelurahan/:kelurahan", middleware.Authentication(), datasetHandler.GetDatasetByKelurahan)
+		datasetRoute.PUT("/:datasetID", middleware.Authentication(), middleware.Authorization(), datasetHandler.UpdateDataset)
+		datasetRoute.GET("/category/:category", middleware.Authentication(), datasetHandler.GetDatasetByCategory)
+		datasetRoute.DELETE("/:datasetID", middleware.Authentication(), middleware.Authorization(), datasetHandler.DeleteDataset)
+		datasetRoute.GET("", middleware.Authentication(), datasetHandler.GetAllDatasets)
 	}
 
 	// CorridorRoute routes
 	corridorRoute := api.Group("/corridor-routes")
 	{
-		corridorRoute.POST("", corridorRouteHandler.CreateCorridorRoute)
-		corridorRoute.GET("/:id", corridorRouteHandler.GetCorridorRouteByID)
-		corridorRoute.GET("/name/:name", corridorRouteHandler.GetCorridorRouteByName)
-		corridorRoute.GET("/route/:route", corridorRouteHandler.GetCorridorRouteByRoute)
-		corridorRoute.GET("/direction/:direction", corridorRouteHandler.GetCorridorRouteByDirection)
-		corridorRoute.PUT("/:id", corridorRouteHandler.UpdateCorridorRoute)
-		corridorRoute.DELETE("/:id", corridorRouteHandler.DeleteCorridorRoute)
-		corridorRoute.GET("", corridorRouteHandler.GetAllCorridorRoutes)
+		corridorRoute.POST("", middleware.Authentication(), middleware.Authorization(), corridorRouteHandler.CreateCorridorRoute)
+		corridorRoute.GET("/:id", middleware.Authentication(), corridorRouteHandler.GetCorridorRouteByID)
+		corridorRoute.GET("/name/:name", middleware.Authentication(), corridorRouteHandler.GetCorridorRouteByName)
+		corridorRoute.GET("/route/:route", middleware.Authentication(), corridorRouteHandler.GetCorridorRouteByRoute)
+		corridorRoute.GET("/direction/:direction", middleware.Authentication(), corridorRouteHandler.GetCorridorRouteByDirection)
+		corridorRoute.PUT("/:id", middleware.Authentication(), middleware.Authorization(), corridorRouteHandler.UpdateCorridorRoute)
+		corridorRoute.DELETE("/:id", middleware.Authentication(), middleware.Authorization(), corridorRouteHandler.DeleteCorridorRoute)
+		corridorRoute.GET("", middleware.Authentication(), corridorRouteHandler.GetAllCorridorRoutes)
 	}
 
 	r.Run()
