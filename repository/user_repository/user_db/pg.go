@@ -58,7 +58,7 @@ func (u *userRepository) GetUserByEmail(email string) (*entity.User, errs.ErrMes
 
 	if err := result.Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errs.NewBadRequestError("Email not found")
+			return nil, errs.NewBadRequestError("Email atau kata sandi tidak valid")
 		}
 
 		return nil, errs.NewInternalServerError("Something went wrong")

@@ -21,25 +21,25 @@ func InitializeDB() {
 }
 
 // handleDBConnection establishes a connection to the database
-func handleDBConnection() {
-	dsn := "xminutecity:xmc2024@tcp(10.199.13.156:3306)/xminutecity?charset=utf8mb4&parseTime=True&loc=Local"
-	db, dbErr = gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
-	if dbErr != nil {
-		log.Fatalf("failed to connect to database: %v", dbErr)
-	}
-}
-
 // func handleDBConnection() {
-// 	dsn := "root:@tcp(127.0.0.1:3306)/15min-city?charset=utf8mb4&parseTime=True&loc=Local"
+// 	dsn := "xminutecity:xmc2024@tcp(10.199.13.156:3306)/xminutecity?charset=utf8mb4&parseTime=True&loc=Local"
 // 	db, dbErr = gorm.Open(mysql.Open(dsn), &gorm.Config{
-// 		Logger: logger.Default.LogMode(logger.Info), // Ini akan menampilkan log semua query SQL
+// 		Logger: logger.Default.LogMode(logger.Info),
 // 	})
 // 	if dbErr != nil {
 // 		log.Fatalf("failed to connect to database: %v", dbErr)
 // 	}
 // }
+
+func handleDBConnection() {
+	dsn := "root:@tcp(127.0.0.1:3306)/15min-city?charset=utf8mb4&parseTime=True&loc=Local"
+	db, dbErr = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info), // Ini akan menampilkan log semua query SQL
+	})
+	if dbErr != nil {
+		log.Fatalf("failed to connect to database: %v", dbErr)
+	}
+}
 
 // createTable creates tables in the database using AutoMigrate
 func createTable() {
