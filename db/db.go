@@ -22,7 +22,7 @@ func InitializeDB() {
 
 // handleDBConnection establishes a connection to the database
 func handleDBConnection() {
-	dsn := "xminutecity:xmc2024@tcp(pwk.its.ac.id:3306)/xminutecity?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "xminutecity:xmc2024@tcp(10.199.13.156:3306)/xminutecity?charset=utf8mb4&parseTime=True&loc=Local"
 	db, dbErr = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
