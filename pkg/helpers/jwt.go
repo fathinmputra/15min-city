@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 
+	"time"
+
 	"github.com/golang-jwt/jwt"
 )
 
@@ -19,6 +21,7 @@ func claimToken(userID int, name string, email string, role string) jwt.MapClaim
 		"name":    name,
 		"email":   email,
 		"role":    role,
+		"exp":     time.Now().Add(time.Hour * 2).Unix(),
 	}
 }
 
