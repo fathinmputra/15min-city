@@ -56,6 +56,7 @@ func App() {
 		datasetRoute.POST("", middleware.Authentication(), middleware.Authorization(), datasetHandler.CreateDataset)
 		datasetRoute.POST("/upload", middleware.Authentication(), middleware.Authorization(), datasetHandler.UploadDatasets)
 		datasetRoute.GET("/:datasetID", middleware.Authentication(), datasetHandler.GetDatasetByID)
+		datasetRoute.GET("/distance", middleware.Authentication(), datasetHandler.GetDatasetsByDistance)
 		datasetRoute.GET("/name/:name", middleware.Authentication(), datasetHandler.GetDatasetByName)
 		datasetRoute.GET("/kecamatan/:kecamatan", middleware.Authentication(), datasetHandler.GetDatasetByKecamatan)
 		datasetRoute.GET("/kelurahan/:kelurahan", middleware.Authentication(), datasetHandler.GetDatasetByKelurahan)

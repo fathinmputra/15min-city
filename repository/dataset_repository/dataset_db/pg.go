@@ -123,3 +123,27 @@ func (r *datasetRepository) GetAllDatasets(ctx context.Context) ([]entity.Datase
 	}
 	return datasets, nil
 }
+
+func (r *datasetRepository) GetDatasetsByDistance(ctx context.Context, latitude, longitude, distance float64) ([]entity.Dataset, errs.ErrMessage) {
+    var datasets []entity.Dataset
+    query := `
+    SELECT 
+        id, name, category, kecamatan, kelurahan, created_at, updated_at,
+        ST_Distance_Sphere(
+            point(longitude, latitude), 
+            point(?, ?)
+        ) AS distance
+    FROM datasets
+    HAVING distance <= ?
+    ORDER BY distance
+    LIMIT 25;
+    `
+    
+    err := r.db.Raw(query, longitude, latitude, distance).Scan(&datasets).Error
+    if err != nil {
+        fmt.Println("Error running query:", err)
+        return nil, errs.NewInternalServerError("failed to retrieve datasets")
+    }
+
+    return datasets, nil
+}

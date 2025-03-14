@@ -16,4 +16,5 @@ type DatasetRepository interface {
 	UpdateDataset(ctx context.Context, dataset entity.Dataset) errs.ErrMessage
 	DeleteDataset(ctx context.Context, id int) errs.ErrMessage
 	GetAllDatasets(ctx context.Context) ([]entity.Dataset, errs.ErrMessage)
+	GetDatasetsByDistance(ctx context.Context, latitude, longitude, distance float64) ([]entity.Dataset, errs.ErrMessage)
 }

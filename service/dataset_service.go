@@ -24,7 +24,7 @@ type DatasetService interface {
 	UpdateDataset(ctx context.Context, id int, datasetPayload dto.UpdateDatasetRequest) (*dto.UpdateDatasetResponse, errs.ErrMessage)
 	DeleteDataset(ctx context.Context, id int) (*dto.DeleteDatasetResponse, errs.ErrMessage)
 	GetAllDatasets(ctx context.Context) ([]dto.GetAllDatasetsResponse, errs.ErrMessage)
-}
+	GetDatasetsByDistance(ctx context.Context, req dto.DatasetDistanceRequest) ([]dto.DatasetDistanceResponse, errs.ErrMessage)}
 
 func NewDatasetService(datasetRepo dataset_repository.DatasetRepository) DatasetService {
 	return &datasetService{
@@ -280,4 +280,31 @@ func (d *datasetService) GetAllDatasets(ctx context.Context) ([]dto.GetAllDatase
 	}
 
 	return response, nil
+}
+
+func (s *datasetService) GetDatasetsByDistance(ctx context.Context, req dto.DatasetDistanceRequest) ([]dto.DatasetDistanceResponse, errs.ErrMessage) {
+    // Memanggil repository untuk mendapatkan datasets
+    datasets, err := s.datasetRepo.GetDatasetsByDistance(ctx, req.Latitude, req.Longitude, req.Distance)
+    if err != nil {
+        return nil, err
+    }
+
+    // Menyusun response untuk return data
+    var response []dto.DatasetDistanceResponse
+    for _, dataset := range datasets {
+        response = append(response, dto.DatasetDistanceResponse{
+            ID:        int(dataset.ID),
+            Name:      dataset.Name,
+            Latitude:  dataset.Latitude,
+            Longitude: dataset.Longitude,
+            Category:  dataset.Category,
+            Kecamatan: dataset.Kecamatan,
+            Kelurahan: dataset.Kelurahan,
+            Distance:  dataset.Distance, // Asumsi: distance dihitung di query SQL
+			CreatedAt: dataset.CreatedAt,
+			UpdatedAt: dataset.UpdatedAt,
+        })
+    }
+
+    return response, nil
 }

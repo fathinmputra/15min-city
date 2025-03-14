@@ -12,4 +12,5 @@ type Dataset struct {
 	Category  string  `json:"category" gorm:"size:255"`
 	Kecamatan string  `json:"kecamatan" gorm:"size:255"`
 	Kelurahan string  `json:"kelurahan" gorm:"size:255"`
+	Distance  float64 `json:"distance"`
 }

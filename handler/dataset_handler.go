@@ -30,6 +30,7 @@ type DatasetHandler interface {
 	DeleteDataset(c *gin.Context)
 	GetAllDatasets(c *gin.Context)
 	UploadDatasets(c *gin.Context)
+	GetDatasetsByDistance(c *gin.Context)
 }
 
 func NewDatasetHandler(datasetService service.DatasetService) DatasetHandler {
@@ -186,27 +187,37 @@ func (d *datasetHandler) CreateDataset(c *gin.Context) {
 }
 
 func (d *datasetHandler) GetDatasetByID(c *gin.Context) {
-	idStr := c.Param("datasetID")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid dataset ID"})
-		return
-	}
+    idStr := c.Param("datasetID")
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "status":  http.StatusBadRequest,
+            "message": "Invalid dataset ID",
+        })
+        return
+    }
 
-	response, err := d.datasetService.GetDatasetByID(c.Request.Context(), id)
-	if err != nil {
-		if customErr, ok := err.(errs.ErrMessage); ok {
-			c.JSON(customErr.Status(), customErr)
-		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "An unexpected error occurred"})
-		}
-		return
-	}
+    response, err := d.datasetService.GetDatasetByID(c.Request.Context(), id)
+    if err != nil {
+        if customErr, ok := err.(errs.ErrMessage); ok {
+            c.JSON(customErr.Status(), gin.H{
+                "status":  customErr.Status(),
+                "message": customErr.Message(),
+            })
+        } else {
+            c.JSON(http.StatusInternalServerError, gin.H{
+                "status":  http.StatusInternalServerError,
+                "message": "An unexpected error occurred",
+            })
+        }
+        return
+    }
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Dataset berhasil didapatkan",
-		"data":    response,
-	})
+    c.JSON(http.StatusOK, gin.H{
+        "status":  http.StatusOK,
+        "message": "Dataset found successfully",
+        "data":    response,
+    })
 }
 
 func (d *datasetHandler) GetDatasetByName(c *gin.Context) {
@@ -332,4 +343,61 @@ func (d *datasetHandler) GetAllDatasets(c *gin.Context) {
 		"message": "Seluruh dataset berhasil didapatkan",
 		"data":    datasets,
 	})
+}
+
+func (d *datasetHandler) GetDatasetsByDistance(c *gin.Context) {
+    latitude, err := strconv.ParseFloat(c.DefaultQuery("latitude", "0"), 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "status":  http.StatusBadRequest,
+            "message": "Invalid latitude parameter",
+        })
+        return
+    }
+
+    longitude, err := strconv.ParseFloat(c.DefaultQuery("longitude", "0"), 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "status":  http.StatusBadRequest,
+            "message": "Invalid longitude parameter",
+        })
+        return
+    }
+
+    distance, err := strconv.ParseFloat(c.DefaultQuery("distance", "0"), 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "status":  http.StatusBadRequest,
+            "message": "Invalid distance parameter",
+        })
+        return
+    }
+
+    req := dto.DatasetDistanceRequest{
+        Latitude:  latitude,
+        Longitude: longitude,
+        Distance:  distance,
+    }
+
+    datasets, err := d.datasetService.GetDatasetsByDistance(c.Request.Context(), req)
+    if err != nil {
+		if customErr, ok := err.(errs.ErrMessage); ok {
+			c.JSON(customErr.Status(), gin.H{
+				"status":  customErr.Status(),
+				"message": customErr.Message(),
+			})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"status":  http.StatusInternalServerError,
+				"message": "An unexpected error occurred",
+			})
+		}
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{
+        "status":  http.StatusOK,
+        "message": "Datasets within distance range retrieved successfully",
+        "data":    datasets,
+    })
 }

@@ -157,3 +157,22 @@ type DeleteDatasetResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 }
+
+type DatasetDistanceRequest struct {
+    Latitude  float64 `json:"latitude" validate:"required"`
+    Longitude float64 `json:"longitude" validate:"required"`
+    Distance  float64 `json:"distance" validate:"required"`
+}
+
+type DatasetDistanceResponse struct {
+    ID        int       `json:"dataset_id"`
+    Name      string    `json:"name"`
+    Latitude  float64   `json:"latitude"`
+    Longitude float64   `json:"longitude"`
+    Category  string    `json:"category"`
+    Kecamatan string    `json:"kecamatan"`
+    Kelurahan string    `json:"kelurahan"`
+    Distance  float64   `json:"distance"`
+    CreatedAt time.Time `json:"created_at"`
+    UpdatedAt time.Time `json:"updated_at"`
+}
