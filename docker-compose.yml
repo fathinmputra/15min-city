@@ -9,6 +9,8 @@ services:
       - "8080:8080"
     environment:
       - ENV=production
+    env_file:
+      - .env
     volumes:
       - .:/app
     networks:

@@ -10,7 +10,6 @@ import (
 
 func main() {
 	// Inisialisasi database
-
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file")
